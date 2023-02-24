@@ -248,9 +248,10 @@ public final class SudokuBoard {
 
     public boolean insert(Position p, int value) {
         try {
-            if(!isValueValid(value)) return false;
+            if (!isValueValid(value))
+                return false;
             return true;
-        }catch(InvalidValueException e) {
+        } catch (InvalidValueException e) {
             return false;
         }
 
