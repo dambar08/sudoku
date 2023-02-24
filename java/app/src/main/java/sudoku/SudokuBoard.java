@@ -1,5 +1,6 @@
 
 package sudoku;
+
 import java.util.Map;
 import java.util.Hashtable;
 import java.util.List;
@@ -7,110 +8,110 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.Queue;
+
 /**
  * Write a description of class SudokuBoard here.
  *
- * @author (Dambar Bahadur Pun)
- * @version (3.0.0)
+ * @author (Dambar Pun)
+ * @version (1.0.0)
  */
-public final class SudokuBoard
-{
+public final class SudokuBoard {
     public static final int MIN_INDEX = 0;
     public static final int MAX_INDEX = 8;
-    //constants
+    // constants
     public static final int SIZE = 9;
     public static final int ROW_SIZE = 9;
     public static final int COLUMN_SIZE = 9;
     public static final int MIN_VALUE = 1;
     public static final int MAX_VALUE = 9;
 
-    //the position and its value
+    // the position and its value
     private Map<Position, Integer> initialState;
     private Map<Position, Integer> emptyState; //
     private Map<Position, Integer> nonEmptyState;
-    
-    
-    private Stack<Position> toBeFilledPositions; //the positions that must be filled
-    private Queue<Position> filledPositions; //the positions that was filled
-    
+
+    private Stack<Position> toBeFilledPositions; // the positions that must be filled
+    private Queue<Position> filledPositions; // the positions that was filled
+
     private int[][] board;
-    public SudokuBoard(int[][] board)throws InvalidSizeException {
-        if(board.length!=COLUMN_SIZE) {
-            throw new InvalidSizeException(String.format("The column size must be equal to %d",COLUMN_SIZE));
+
+    public SudokuBoard(int[][] board) throws InvalidSizeException {
+        if (board.length != COLUMN_SIZE) {
+            throw new InvalidSizeException(String.format("The column size must be equal to %d", COLUMN_SIZE));
         }
-        for(int i=0;i<COLUMN_SIZE;i++) {
-            if(board[i].length!=ROW_SIZE) {
-                throw new InvalidSizeException(String.format("The row size must be equal to %d",ROW_SIZE));
+        for (int i = 0; i < COLUMN_SIZE; i++) {
+            if (board[i].length != ROW_SIZE) {
+                throw new InvalidSizeException(String.format("The row size must be equal to %d", ROW_SIZE));
             }
         }
         this.board = board;
-        initialState = mapBoardPosition(this.board); //for functional style
-        //for object oriented style
+        initialState = mapBoardPosition(this.board); // for functional style
+        // for object oriented style
     }
 
     /*
-     *  Functional style(NOT PURE FUNCTIONAL STYLE)
+     * Functional style(NOT PURE FUNCTIONAL STYLE)
      */
     /**
      * This method is responsible for mapping the initial state of the the board.
      */
-    private Map<Position,Integer> mapBoardPosition(int[][] board) {
+    private Map<Position, Integer> mapBoardPosition(int[][] board) {
         Map<Position, Integer> initialState = new Hashtable<>();
         try {
-            for(int i=0;i<board.length; i++) {
-                for(int j=0;j<board[i].length;j++) {
-                    initialState.put(new Position(i,j),board[i][j]);
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    initialState.put(new Position(i, j), board[i][j]);
                 }
             }
-        }catch(InvalidPositionException e) {
+        } catch (InvalidPositionException e) {
             e.printStackTrace();
         }
         return initialState;
     }
 
     /*
-     *  Functional style(NOT PURE FUNCTIONAL STYLE)
+     * Functional style(NOT PURE FUNCTIONAL STYLE)
      */
     /**
-     * 
+     *
      * This method is responsible for mapping the empty positions of the board
      */
-    //todo do not use this
+    // todo do not use this
     private Map<Position, Integer> mapEmptyBoardPosition(int[][] board) {
         Map<Position, Integer> emptyState = new Hashtable<>();
         try {
-            for(int i=0;i<board.length; i++) {
-                for(int j=0;j<board[i].length;j++) {
-                    if(board[i][j] == 0){
-                        emptyState.put(new Position(i,j),board[i][j]);
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    if (board[i][j] == 0) {
+                        emptyState.put(new Position(i, j), board[i][j]);
                     }
                 }
             }
-        }catch(InvalidPositionException e) {
+        } catch (InvalidPositionException e) {
             e.printStackTrace();
         }
         return emptyState;
     }
-    
+
     /*
-     *  Functional style(NOT PURE FUNCTIONAL STYLE)
+     * Functional style(NOT PURE FUNCTIONAL STYLE)
      */
     /**
- 
+     *
      * This method is responsible for mapping the non-empty positions of the board
      */
-    //todo do not use this
-    private Map<Position,Integer> mapNonEmptyBoardPosition(int[][] board) {
+    // todo do not use this
+    private Map<Position, Integer> mapNonEmptyBoardPosition(int[][] board) {
         Map<Position, Integer> nonEmptyState = new Hashtable<>();
         try {
-            for(int i=0;i<board.length; i++) {
-                for(int j=0;j<board[i].length;j++) {
-                    if(board[i][j] != 0){
-                        nonEmptyState.put(new Position(i,j),board[i][j]);
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    if (board[i][j] != 0) {
+                        nonEmptyState.put(new Position(i, j), board[i][j]);
                     }
                 }
             }
-        }catch(InvalidPositionException e) {
+        } catch (InvalidPositionException e) {
             e.printStackTrace();
         }
         return nonEmptyState;
@@ -120,23 +121,23 @@ public final class SudokuBoard
      * Object oriented style
      */
     /**
-     * 
+     *
      * This method is responsible for mapping the initail state of the the board.
      */
     private void mapBoard() {
-        try{
-            for(int i=0;i<COLUMN_SIZE; i++) {
-                for(int j=0;j<ROW_SIZE;j++) {
-                    if(board[i][j] == 0){
-                        this.emptyState.put(new Position(i,j),board[i][j]);
-                        this.toBeFilledPositions.push(new Position(i,j));
-                    }else {
-                        this.nonEmptyState.put(new Position(i,j), board[i][j]);
+        try {
+            for (int i = 0; i < COLUMN_SIZE; i++) {
+                for (int j = 0; j < ROW_SIZE; j++) {
+                    if (board[i][j] == 0) {
+                        this.emptyState.put(new Position(i, j), board[i][j]);
+                        this.toBeFilledPositions.push(new Position(i, j));
+                    } else {
+                        this.nonEmptyState.put(new Position(i, j), board[i][j]);
                     }
-                    this.initialState.put(new Position(i,j),board[i][j]);
+                    this.initialState.put(new Position(i, j), board[i][j]);
                 }
             }
-        }catch(InvalidPositionException e) {
+        } catch (InvalidPositionException e) {
             e.printStackTrace();
         }
     }
@@ -145,7 +146,7 @@ public final class SudokuBoard
         return true;
     }
 
-    private boolean isValidWithinItsArea(Position p, int value){
+    private boolean isValidWithinItsArea(Position p, int value) {
         int upperLimitRow, lowerLimitRow, upperLimitCol, lowerLimitCol = 0;
         Point px = getUpperLimit(p.x);
         upperLimitRow = px.upper;
@@ -155,12 +156,12 @@ public final class SudokuBoard
         upperLimitCol = py.upper;
         lowerLimitCol = py.lower;
 
-        for(int k=lowerLimitRow;k<=upperLimitRow;k++) {
-            for(int l=lowerLimitCol;l<=upperLimitCol;l++) {
-                if((k==p.x)&&(l==p.y)) {
+        for (int k = lowerLimitRow; k <= upperLimitRow; k++) {
+            for (int l = lowerLimitCol; l <= upperLimitCol; l++) {
+                if ((k == p.x) && (l == p.y)) {
                     continue;
-                }else {
-                    if(this.board[k][l]==value) {
+                } else {
+                    if (this.board[k][l] == value) {
                         return false;
                     }
                 }
@@ -174,32 +175,32 @@ public final class SudokuBoard
     }
 
     private Point getUpperLimit(int x) {
-        if(x<3) {
-            return new Point(2,0);
-        }else if(x<6) {    
-            return new Point(5,3);
-        }else {   
-            return new Point(8,6);
+        if (x < 3) {
+            return new Point(2, 0);
+        } else if (x < 6) {
+            return new Point(5, 3);
+        } else {
+            return new Point(8, 6);
         }
     }
 
     private Point getLowerLimit(int y) {
-        if(y<3) {
-            return new Point(2,0);
-        }else if(y<6) {
-            return new Point(5,3);
-        }else {
-            return new Point(8,6);
+        if (y < 3) {
+            return new Point(2, 0);
+        } else if (y < 6) {
+            return new Point(5, 3);
+        } else {
+            return new Point(8, 6);
         }
     }
 
-    private boolean isHorizontallyValid(final Position p,final int value)throws InvalidValueException {
-        if(isValueValid(value)) {
-            for(int i=0;i<ROW_SIZE;i++) {
-                if(i==p.y) {
+    private boolean isHorizontallyValid(final Position p, final int value) throws InvalidValueException {
+        if (isValueValid(value)) {
+            for (int i = 0; i < ROW_SIZE; i++) {
+                if (i == p.y) {
                     continue;
-                }else {
-                    if(this.board[p.x][i]==value) {
+                } else {
+                    if (this.board[p.x][i] == value) {
                         return false;
                     }
                 }
@@ -212,13 +213,13 @@ public final class SudokuBoard
         return true;
     }
 
-    private boolean isVerticallyValid(final Position p, final int value)throws InvalidValueException {
-        if(isValueValid(value)) {
-            for(int i=0;i<COLUMN_SIZE;i++) {
-                if(i==p.x) {
+    private boolean isVerticallyValid(final Position p, final int value) throws InvalidValueException {
+        if (isValueValid(value)) {
+            for (int i = 0; i < COLUMN_SIZE; i++) {
+                if (i == p.x) {
                     continue;
-                }else {
-                    if(this.board[i][p.y]==value) {
+                } else {
+                    if (this.board[i][p.y] == value) {
                         return false;
                     }
                 }
@@ -227,96 +228,37 @@ public final class SudokuBoard
         return true;
     }
 
-    private boolean isValueValid(int value)throws InvalidValueException {
+    private boolean isValueValid(int value) throws InvalidValueException {
         if (value >= MIN_VALUE && value <= MAX_VALUE) {
             throw new InvalidValueException();
         }
         return true;
     }
 
-    private Position getNextPosition(int i, int j)throws InvalidPositionException{
-        for(;i<this.COLUMN_SIZE;i++) {
-            for(;j<this.ROW_SIZE;j++) {
-                if(this.board[i][j]==0) {
-                    return new Position(i,j);
+    private Position getNextPosition(int i, int j) throws InvalidPositionException {
+        for (; i < this.COLUMN_SIZE; i++) {
+            for (; j < this.ROW_SIZE; j++) {
+                if (this.board[i][j] == 0) {
+                    return new Position(i, j);
                 }
             }
         }
-        return new Position(-1,-1);
+        return new Position(-1, -1);
     }
-    
+
     public boolean insert(Position p, int value) {
-        if(isValueValid(value)) {
+        try {
+            if (!isValueValid(value))
+                return false;
+            return true;
+        } catch (InvalidValueException e) {
+            return false;
         }
-        return 
+
     }
-    
+
     public boolean delete(Position p) {
-        
+        return false;
     }
-    
+
 }
-
-class InvalidSizeException extends RuntimeException {
-    public InvalidSizeException(String msg) {
-        super(msg);
-    }
-
-    public InvalidSizeException() {
-        super(String.format("The sudoku board must have %d rows and $d columns.",SudokuBoard.ROW_SIZE,SudokuBoard.COLUMN_SIZE));
-    }
-}
-
-class InvalidValueException extends Exception {
-    public InvalidValueException(String msg) {
-        super(msg);
-    }
-
-    public InvalidValueException() {
-        super(String.format("The board value must be between %d and %d"+SudokuBoard.MIN_VALUE,SudokuBoard.MAX_VALUE));
-    }
-}
-
-class InvalidPositionException extends Exception {
-    public InvalidPositionException() {
-        super("Invalid Position");
-    }
-
-    public InvalidPositionException(String msg) {
-        super(msg);
-    }
-}
-
-class NotEmptyPositionException extends Exception {
-    public NotEmptyPositionException() {
-        super("The position is not empty");
-    }
-
-    public NotEmptyPositionException(String msg) {
-        super(msg);
-    }
-}
-
-class Position {
-    public final int x;
-    public final int y;
-
-    public Position(int x, int y)throws InvalidPositionException {
-        if(x < SudokuBoard.MIN_INDEX || y > SudokuBoard.MAX_INDEX) {
-            throw new InvalidPositionException();
-        }
-        this.x = x;
-        this.y = y;
-    }
-}
-
-class Point {
-    public final int upper;
-    public final int lower;
-
-    public Point(int upper,int lower){
-        this.upper = upper;
-        this.lower = lower;
-    }
-}
-
